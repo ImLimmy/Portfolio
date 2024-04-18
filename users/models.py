@@ -39,8 +39,8 @@ class CustomUser(AbstractUser):
     password = models.CharField(max_length=255, unique=True)
 
     # for profile
-    first_name = models.CharField(max_length=255)
-    last_name = models.CharField(max_length=255)
+    first_name = models.CharField(max_length=255, null = True, blank=True)
+    last_name = models.CharField(max_length=255, null = True, blank=True)
 
     # Permissions
     created_at = models.DateTimeField(auto_now_add=True)
@@ -63,13 +63,5 @@ class CustomUser(AbstractUser):
     
     def has_perms(self, perm_list: Collection[str]) -> bool:
         return self.is_superuser
-    
-    @property
-    def first_name(self):
-        return self.first_name
-    
-    @property
-    def last_name(self):
-        return self.last_name
     
     

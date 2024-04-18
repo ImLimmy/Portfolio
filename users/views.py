@@ -1,4 +1,5 @@
-from rest_framework import generics, permissions, status
+from rest_framework import generics, status
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.views import APIView
 from django.contrib.auth import authenticate
 from rest_framework.authtoken.models import Token
@@ -8,30 +9,27 @@ from .models import CustomUser
 from .serializers import *
 
 class Login(APIView):
-    permission_classes = (permissions.AllowAny)
+    permission_classes = [AllowAny]
     
     def post(self, request):
         username = request.data.get('username')
         password = request.data.get('password')
         user = authenticate(request, username=username, password=password)
-        data = {}
         
         if user:
             token, created = Token.objects.get_or_create(user=user)
-            serializer = UserDetailSerializer(CustomUser)
+            serializer = UserDetailSerializer(user)
             user_data = serializer.data
-            data['token'] = token.key
-            data['user'] = user_data
-            return Response(data)
+            return Response({'token': token.key, 'user': user_data}, status=status.HTTP_200_OK)
         return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
     
     
 class Logout(APIView):
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = [IsAuthenticated]
 
     def post(self, request):
         request.user.auth_token.delete()
-        return Response(status=status.HTTP_200_OK)
+        return Response({'response': 'Successfully logged out'})
 
 
 class UserCreate(generics.CreateAPIView):
