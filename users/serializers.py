@@ -1,20 +1,22 @@
 from rest_framework import serializers
+from rest_framework.serializers import ModelSerializer
 
 from .models import CustomUser
 
-class User(serializers.ModelSerializer):
+
+class UserSerializer(ModelSerializer):
     class Meta:
         model = CustomUser
         fields = '__all__'
-        
-    
-class UserDetail(serializers.ModelSerializer):
+
+
+class UserDetailSerializer(ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ('id', 'image', 'fullname', 'Bio', 'Tagline', 'address', 'email', 'contact_number')
-        
+        fields = '__all__'
 
-class UserUpdate(serializers.ModelSerializer):
+
+class UserUpdateSerializer(ModelSerializer):
     class Meta:
         model = CustomUser
         fields = '__all__'

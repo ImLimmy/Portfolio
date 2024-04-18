@@ -18,7 +18,7 @@ class Login(APIView):
         
         if user:
             token, created = Token.objects.get_or_create(user=user)
-            serializer = UserDetail(CustomUser)
+            serializer = UserDetailSerializer(CustomUser)
             user_data = serializer.data
             data['token'] = token.key
             data['user'] = user_data
@@ -36,14 +36,14 @@ class Logout(APIView):
 
 class UserCreate(generics.CreateAPIView):
     queryset = CustomUser.objects.all()
-    serializer_class = User
+    serializer_class = UserDetailSerializer
     
 
 class UserDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = CustomUser.objects.all()
-    serializer_class = UserDetail
+    serializer_class = UserDetailSerializer
     
     def get_serializer_class(self):
         if self.request.method == 'PUT':
-            return User
-        return UserDetail
+            return UserUpdateSerializer
+        return UserDetailSerializer

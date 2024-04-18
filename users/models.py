@@ -37,21 +37,10 @@ class CustomUser(AbstractUser):
     username = models.CharField(max_length=255, unique=True)
     email = models.EmailField(max_length=255, unique=True)
     password = models.CharField(max_length=255, unique=True)
-    
-    # Profile 
-    image = models.ImageField(upload_to='profile_images/')
+
+    # for profile
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
-    middle_name = models.CharField(max_length=255)
-    suffix = models.CharField(
-        max_length=255, choices=Suffix, null=True, blank=True, default='')
-    gender = models.CharField(max_length=255, choices=Gender, default='Male')
-    contact_number = models.CharField(
-        max_length=255, null=True, blank=True, unique=True)
-    address = models.CharField(null=True, blank=True, max_length=255)
-    birthday = models.DateField(null=True, blank=True)
-    bio = models.TextField()
-    tagline = models.CharField(max_length=255)
 
     # Permissions
     created_at = models.DateTimeField(auto_now_add=True)
@@ -65,9 +54,9 @@ class CustomUser(AbstractUser):
     REQUIRED_FIELDS = ['email']
 
     objects = CustomUserManager()
-    
+        
     def __str__(self) -> str:
-        return f'{self.fullname}'
+        return f'{self.username}'
     
     def has_module_perms(self, app_label: str) -> bool:
         return self.is_superuser
@@ -76,11 +65,11 @@ class CustomUser(AbstractUser):
         return self.is_superuser
     
     @property
-    def fullname(self):
-        if self.first_name and self.last_name:
-            if self.suffix:
-                return f'{self.first_name} {self.last_name} {self.suffix}'
-            return f'{self.first_name} {self.last_name}'
-        return self.username
+    def first_name(self):
+        return self.first_name
+    
+    @property
+    def last_name(self):
+        return self.last_name
     
     
